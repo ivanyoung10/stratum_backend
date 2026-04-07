@@ -2,54 +2,38 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Project Context
+
+This is a college-level CS student project (SE467) — a backend for the **Stratum** news application. The goal is both to build a working product and to provide a learning experience. When assisting, highlight design decisions, scalability/performance implications, security considerations, and maintainability concerns to help the student grow as a developer.
+
+## Stack
+
+- **Runtime**: Node.js 25
+- **Framework**: Express 5
+- **Language**: JavaScript (TypeScript may be added)
+
 ## Commands
 
 ```bash
-npm run dev       # Start development server
-npm run build     # Production build
-npm run start     # Start production server
-npm run lint      # Run ESLint
+npm start       # Start the server
+npm run dev     # Start with hot-reload (if configured)
+npm test        # Run tests (if configured)
 ```
 
-## Architecture
+## Code Guidelines
 
-This is a Next.js (App Router) + Supabase application called "Stratum App" — a news site. It uses React 19, TypeScript, Tailwind CSS, and shadcn/ui components.
+These apply to all code added or modified:
 
-### Authentication System
+- **File headers**: Every file should have a top-level comment explaining its purpose.
+- **Function comments**: Every function should have a comment describing what it does, its parameters, and return value.
+- **Inline comments**: Add a comment above any added or modified code segment explaining how it works and why.
+- **UI/design**: For frontend behavior and styling, refer to `/doc` for design guidelines and branding.
 
-Auth is cookie-based using `@supabase/ssr`. There are three Supabase client factories:
+## Learning Goals to Highlight
 
-- **`lib/supabase/client.ts`** — Browser client (`createBrowserClient`), used in `"use client"` components
-- **`lib/supabase/server.ts`** — Server client (`createServerClient`) with Next.js cookie integration, used in Server Components and Route Handlers
-- **`lib/supabase/proxy.ts`** — `updateSession()` function used by middleware to validate/refresh sessions on every request
+When reviewing or writing code, proactively call out:
 
-Route protection is handled by middleware in `proxy.ts` (root). Unauthenticated users are redirected to `/auth/login` for any route except `/` and `/auth/*`.
-
-### Routing
-
-- `/` — Public home page
-- `/auth/*` — Login, sign-up, password reset, email confirmation flows
-- `/protected/*` — Authenticated routes (guarded by middleware)
-
-### UI
-
-- shadcn/ui components in `components/ui/` (New York style, Lucide icons)
-- `cn()` utility in `lib/utils.ts` for Tailwind class merging (clsx + tailwind-merge)
-- Dark mode via `next-themes` with class-based Tailwind dark mode
-- Path alias: `@/*` maps to project root
-
-### Environment Variables
-
-Requires `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` in `.env.local`.
-
-## Coding Guidelines
-
-- **Single responsibility**: Functions should do one thing only. If a function is doing multiple things, break it into smaller, focused functions.
-
-- **Mobile First**: This app should be designed for mobile-layout first and desktop second.
-
-- **Semantic HTML**: Use semantic html instead of divs where possible for greatest SEO/Accessibility
-
-- **Meaningful comments**: Write code in human-readable format + succinct comments
-
-- **SSR**: Keep components/pages server-side rendered as much as possible
+- **Scalability**: flag bottlenecks and suggest how the code holds up under load
+- **Security**: identify vulnerabilities (e.g., injection, auth issues) and suggest mitigations
+- **Maintainability**: note readability or structural issues and how to improve them
+- **Testing**: encourage tests that cover normal paths, edge cases, and failure modes
