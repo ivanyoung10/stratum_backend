@@ -15,7 +15,16 @@ const mongoose = require('mongoose');
  */
 async function connectDB() {
   try {
-    await mongoose.connect(process.env.MONGODB_URI);
+    await mongoose.connect(process.env.MONGODB_URI, {
+      // Fail queries immediately if the connection drops instead of buffering them silently.
+      // Without this, route handlers hang indefinitely waiting for a connection that never comes.
+      bufferCommands: false,
+      // Give up finding a MongoDB server after 5 seconds.
+      serverSelectionTimeoutMS: 5000,
+      // Give up waiting for a query response after 10 seconds.
+      // Without this, queries on an established connection can hang forever.
+      socketTimeoutMS: 10000,
+    });
     console.log('MongoDB connected:', process.env.MONGODB_URI);
   } catch (error) {
     console.error('MongoDB connection failed:', error.message);

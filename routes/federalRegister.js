@@ -27,21 +27,20 @@ const router = Router();
  */
 router.get('/', async (req, res) => {
   try {
-    res.status(200).send("Hello")
-    // const query = {};
+    const query = {};
 
-    // // If a date filter is provided, convert it to a day-range query so the comparison
-    // // works correctly against the stored Date objects regardless of time component.
-    // if (req.query.date) {
-    //   const start = new Date(req.query.date);
-    //   const end   = new Date(req.query.date);
-    //   end.setDate(end.getDate() + 1);
-    //   query.publicationDate = { $gte: start, $lt: end };
-    // }
+    // If a date filter is provided, convert it to a day-range query so the comparison
+    // works correctly against the stored Date objects regardless of time component.
+    if (req.query.date) {
+      const start = new Date(req.query.date);
+      const end   = new Date(req.query.date);
+      end.setDate(end.getDate() + 1);
+      query.publicationDate = { $gte: start, $lt: end };
+    }
 
-    // const documents = await FederalDocument.find(query).sort({ publicationDate: -1 });
+    const documents = await FederalDocument.find(query).sort({ publicationDate: -1 });
 
-    // res.json({ count: documents.length, documents });
+    res.json({ count: documents.length, documents });
   } catch (error) {
     console.error('[GET /api/federal-register] Error:', error.message);
     res.status(500).json({ error: 'Failed to retrieve documents' });
